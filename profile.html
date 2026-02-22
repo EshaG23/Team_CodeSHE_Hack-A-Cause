@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishi Jal Mitra – Farmer Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=Tiro+Devanagari+Marathi&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #3b2a1a; --bark: #5c3d1e; --leaf: #2d6a4f; --leaf-light: #40916c;
+    --sprout: #74c69d; --mist: #b7e4c7; --cream: #fdf6ec; --straw: #e9c46a;
+    --wheat: #f4a261; --sky: #d8f3dc; --text-dark: #1b2e1e; --text-mid: #3d5a3e;
+    --shadow: rgba(45,106,79,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100vh; background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(--text-dark); overflow-x: hidden; }
+  body.lang-mr, body.lang-hi { font-family: 'Tiro Devanagari Marathi', 'DM Sans', sans-serif; }
+
+  /* ── BG ── */
+  .bg-scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .sky-gradient { position: absolute; inset: 0; background: linear-gradient(180deg, #c8f5d8 0%, #e8f9ee 40%, #fdf6ec 70%); }
+  .sun { position: absolute; top: 32px; right: 80px; width: 64px; height: 64px; background: radial-gradient(circle, #ffe066 60%, transparent 100%); border-radius: 50%; box-shadow: 0 0 40px 10px #ffe06688, 0 0 80px 20px #f4a26133; animation: sun-pulse 4s ease-in-out infinite; }
+  @keyframes sun-pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.07);} }
+  .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.7; }
+  .cloud::before,.cloud::after { content:''; position:absolute; background:white; border-radius:50%; }
+  .cloud-1 { width:100px; height:30px; top:55px; left:10%; animation:drift 22s linear infinite; }
+  .cloud-1::before { width:50px; height:50px; top:-25px; left:10px; }
+  .cloud-1::after  { width:30px; height:30px; top:-15px; left:45px; }
+  .cloud-2 { width:70px; height:22px; top:90px; left:35%; animation:drift 30s linear infinite 8s; opacity:0.5; }
+  .cloud-2::before { width:35px; height:35px; top:-18px; left:8px; }
+  .cloud-2::after  { width:22px; height:22px; top:-10px; left:34px; }
+  @keyframes drift { from{transform:translateX(-200px);} to{transform:translateX(110vw);} }
+  .hills { position:absolute; bottom:0; width:100%; }
+  .hill  { position:absolute; bottom:0; border-radius:50% 50% 0 0; }
+  .hill-1 { width:120%; height:220px; left:-10%; background:linear-gradient(180deg,#2d6a4f,#1b4332); }
+  .hill-2 { width:90%;  height:170px; left:20%;  background:linear-gradient(180deg,#40916c,#2d6a4f); }
+  .hill-3 { width:70%;  height:130px; left:50%;  background:linear-gradient(180deg,#74c69d,#40916c); }
+
+  .leaf-float { position:absolute; animation:leaf-fall linear infinite; opacity:0.6; }
+  @keyframes leaf-fall { 0%{transform:translateY(-60px) rotate(0deg);opacity:0.7;} 100%{transform:translateY(110vh) rotate(360deg) translateX(60px);opacity:0;} }
+
+  /* ── Layout ── */
+  .main { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:30px 16px 60px; }
+
+  /* Header */
+  .header { text-align:center; margin-bottom:32px; animation:fade-down 0.8s ease both; }
+  @keyframes fade-down { from{opacity:0;transform:translateY(-24px);} to{opacity:1;transform:translateY(0);} }
+  .logo-badge { display:inline-flex; align-items:center; gap:10px; background:var(--leaf); color:white; padding:8px 20px; border-radius:999px; font-size:13px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; box-shadow:0 4px 16px var(--shadow); }
+  .logo-badge .lbico { font-size:18px; }
+  .header h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,6vw,3.2rem); font-weight:900; color:var(--soil); line-height:1.15; }
+  body.lang-mr .header h1, body.lang-hi .header h1 { font-family:'Tiro Devanagari Marathi',serif; font-size:clamp(1.5rem,5vw,2.6rem); }
+  .header h1 em { font-style:normal; color:var(--leaf); }
+  .header p { margin-top:10px; color:var(--text-mid); font-size:15px; }
+
+  /* Card */
+  .card { background:rgba(255,255,255,0.88); backdrop-filter:blur(14px); border:1.5px solid rgba(116,198,157,0.3); border-radius:24px; padding:32px 28px; width:100%; max-width:600px; box-shadow:0 8px 48px var(--shadow),0 1px 0 rgba(255,255,255,0.8) inset; margin-bottom:20px; }
+  @keyframes fade-up { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+  .card:nth-child(2){animation:fade-up 0.7s 0.0s ease both;}
+  .card:nth-child(3){animation:fade-up 0.7s 0.1s ease both;}
+  .card:nth-child(4){animation:fade-up 0.7s 0.2s ease both;}
+  .card:nth-child(5){animation:fade-up 0.7s 0.3s ease both;}
+
+  .lang-transition * { animation:lang-flash 0.35s ease both !important; }
+  @keyframes lang-flash { from{opacity:0.2;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+  .section-label { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .section-icon { width:36px; height:36px; background:var(--leaf); border-radius:10px; display:grid; place-items:center; font-size:18px; flex-shrink:0; }
+  .section-title { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; color:var(--soil); }
+  body.lang-mr .section-title, body.lang-hi .section-title { font-family:'Tiro Devanagari Marathi',serif; font-size:1rem; }
+  .section-sub { font-size:12px; color:var(--text-mid); margin-top:1px; }
+
+  /* Lang pills */
+  .lang-group { display:flex; gap:12px; flex-wrap:wrap; }
+  .lang-pill { flex:1; min-width:100px; padding:14px 10px; border:2px solid #d1fae5; border-radius:14px; background:white; cursor:pointer; text-align:center; transition:all 0.2s; position:relative; overflow:hidden; }
+  .lang-pill input { display:none; }
+  .pill-native { display:block; font-size:18px; font-weight:700; color:var(--leaf); line-height:1.2; }
+  .pill-en { display:block; font-size:11px; color:var(--text-mid); margin-top:2px; }
+  .lang-pill:hover { border-color:var(--sprout); background:var(--sky); transform:translateY(-2px); }
+  .lang-pill.selected { border-color:var(--leaf); background:linear-gradient(135deg,#d8f3dc,#b7e4c7); transform:translateY(-3px); box-shadow:0 6px 20px var(--shadow); }
+  .lang-pill.selected .pill-native { color:var(--soil); }
+  .check-mark { position:absolute; top:6px; right:8px; width:18px; height:18px; background:var(--leaf); border-radius:50%; display:none; align-items:center; justify-content:center; color:white; font-size:10px; font-weight:700; }
+  .lang-pill.selected .check-mark { display:flex; }
+
+  /* Location */
+  .location-options { display:flex; flex-direction:column; gap:12px; }
+  .loc-option { border:2px solid #d1fae5; border-radius:14px; padding:14px 16px; cursor:pointer; transition:all 0.2s; background:white; display:flex; align-items:center; gap:14px; }
+  .loc-option:hover { border-color:var(--sprout); background:#f0fdf4; }
+  .loc-option.selected { border-color:var(--leaf); background:linear-gradient(135deg,#f0fdf4,#d8f3dc); box-shadow:0 4px 16px var(--shadow); }
+  .loc-icon { font-size:26px; width:44px; text-align:center; flex-shrink:0; }
+  .loc-title { font-weight:600; font-size:14px; color:var(--soil); }
+  .loc-desc  { font-size:12px; color:var(--text-mid); }
+  .badge-rec { margin-left:auto; background:var(--straw); color:var(--soil); padding:3px 10px; border-radius:999px; font-size:10px; font-weight:700; flex-shrink:0; }
+  .manual-fields { margin-top:14px; display:none; flex-direction:column; gap:10px; }
+  .manual-fields.show { display:flex; }
+  .field-row { display:flex; gap:10px; }
+  .field-row .f-input { flex:1; }
+  .f-input label { display:block; font-size:11px; font-weight:600; color:var(--leaf); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+  .f-input input,.f-input select { width:100%; padding:10px 14px; border:1.5px solid #d1fae5; border-radius:10px; background:white; font-family:inherit; font-size:14px; color:var(--text-dark); outline:none; transition:all 0.2s; }
+  .f-input input:focus,.f-input select:focus { border-color:var(--leaf-light); box-shadow:0 0 0 3px rgba(64,145,108,0.12); }
+  .gps-live { display:none; align-items:center; gap:8px; margin-top:12px; background:#f0fdf4; border:1.5px solid var(--sprout); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--leaf); font-weight:500; }
+  .gps-live.show { display:flex; }
+  .gps-dot { width:10px; height:10px; background:#22c55e; border-radius:50%; animation:blink 1.2s ease-in-out infinite; flex-shrink:0; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* Chips */
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { padding:8px 16px; border:2px solid #d1fae5; border-radius:999px; background:white; cursor:pointer; font-size:13px; font-weight:500; color:var(--text-mid); transition:all 0.18s; }
+  .chip input { display:none; }
+  .chip:hover { border-color:var(--sprout); color:var(--leaf); background:#f0fdf4; transform:translateY(-1px); }
+  .chip.selected { border-color:var(--leaf); background:linear-gradient(135deg,#2d6a4f,#40916c); color:white; box-shadow:0 4px 12px var(--shadow); transform:translateY(-2px); }
+
+  /* Farm size */
+  .farm-sizes { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .size-card { border:2px solid #d1fae5; border-radius:14px; padding:12px 6px; background:white; cursor:pointer; text-align:center; transition:all 0.2s; }
+  .size-card input { display:none; }
+  .size-icon { font-size:24px; margin-bottom:4px; display:block; }
+  .size-label { font-size:11px; font-weight:700; color:var(--soil); }
+  .size-sub   { font-size:10px; color:var(--text-mid); }
+  .size-card:hover { border-color:var(--sprout); background:#f0fdf4; transform:translateY(-2px); }
+  .size-card.selected { border-color:var(--leaf); background:linear-gradient(135deg,#d8f3dc,#b7e4c7); box-shadow:0 6px 18px var(--shadow); transform:translateY(-3px); }
+
+  /* Crop */
+  .crop-search-wrap { position:relative; margin-bottom:10px; }
+  .crop-search-wrap input { width:100%; padding:10px 14px 10px 38px; border:1.5px solid #d1fae5; border-radius:10px; background:white; font-family:inherit; font-size:14px; outline:none; transition:all 0.2s; }
+  .crop-search-wrap input:focus { border-color:var(--leaf-light); box-shadow:0 0 0 3px rgba(64,145,108,0.12); }
+  .search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:16px; }
+
+  /* Growth stage */
+  .growth-timeline { display:flex; gap:0; width:100%; }
+  .stage-item { flex:1; text-align:center; cursor:pointer; padding:10px 4px; position:relative; transition:all 0.2s; }
+  .stage-item::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:3px; background:#d1fae5; transition:background 0.2s; }
+  .stage-item input { display:none; }
+  .s-icon  { font-size:22px; display:block; margin-bottom:4px; }
+  .s-label { font-size:10px; font-weight:600; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.3px; }
+  .stage-item:hover .s-label { color:var(--leaf); }
+  .stage-item.selected .s-label { color:var(--leaf); font-weight:700; }
+  .stage-item.selected::after { background:var(--leaf); }
+  .stage-item.selected { background:linear-gradient(180deg,#f0fdf4,white); border-radius:10px 10px 0 0; }
+
+  .sub-label { font-size:12px; font-weight:600; color:var(--leaf); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
+
+  /* Save */
+  .save-btn { width:100%; max-width:600px; padding:18px; background:linear-gradient(135deg,var(--leaf),var(--leaf-light)); color:white; border:none; border-radius:16px; font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; cursor:pointer; letter-spacing:0.5px; box-shadow:0 8px 28px var(--shadow); transition:all 0.25s; display:flex; align-items:center; justify-content:center; gap:10px; animation:fade-up 0.7s 0.5s ease both; position:relative; overflow:hidden; }
+  body.lang-mr .save-btn, body.lang-hi .save-btn { font-family:'Tiro Devanagari Marathi',serif; font-size:1rem; }
+  .save-btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent); transition:left 0.5s; }
+  .save-btn:hover::before { left:100%; }
+  .save-btn:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(45,106,79,0.35); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--soil); color:white; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:10px; box-shadow:0 8px 32px rgba(0,0,0,0.25); z-index:1000; transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* Progress */
+  .progress-track { display:flex; gap:6px; justify-content:center; margin-bottom:24px; }
+  .prog-dot { width:8px; height:8px; border-radius:50%; background:#d1fae5; transition:all 0.3s; }
+  .prog-dot.active { background:var(--leaf); width:24px; border-radius:4px; }
+
+  .divider { height:1px; background:linear-gradient(90deg,transparent,#d1fae5,transparent); margin:20px 0; }
+  .optional-tag { display:inline-block; background:var(--straw); color:var(--soil); font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:8px; vertical-align:middle; }
+
+  @media (max-width:420px) {
+    .farm-sizes { grid-template-columns:repeat(2,1fr); }
+    .card { padding:22px 16px; }
+    .growth-timeline { flex-wrap:wrap; gap:6px; }
+    .stage-item { min-width:60px; border-radius:10px; }
+    .stage-item::after { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-scene">
+  <div class="sky-gradient"></div>
+  <div class="sun"></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="hills">
+    <div class="hill hill-1"></div>
+    <div class="hill hill-2"></div>
+    <div class="hill hill-3"></div>
+  </div>
+
+  <div class="leaf-float" style="left:10%;animation-duration:12s;animation-delay:0s;font-size:16px;">🍃</div>
+  <div class="leaf-float" style="left:30%;animation-duration:18s;animation-delay:4s;font-size:22px;">🌿</div>
+  <div class="leaf-float" style="left:65%;animation-duration:14s;animation-delay:7s;font-size:14px;">🍃</div>
+  <div class="leaf-float" style="left:85%;animation-duration:20s;animation-delay:2s;font-size:18px;">🌾</div>
+</div>
+
+<div class="main">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-badge"><span class="lbico">🌾</span> <span id="appName">Krishi Jal Mitra</span></div>
+    <h1 id="headerTitle">Your <em>Farmer</em> Profile</h1>
+    <p id="headerSub">Personalized irrigation &amp; government scheme recommendations</p>
+  </div>
+
+  <div class="progress-track">
+    <div class="prog-dot active" id="pd1"></div>
+    <div class="prog-dot" id="pd2"></div>
+    <div class="prog-dot" id="pd3"></div>
+    <div class="prog-dot" id="pd4"></div>
+    <div class="prog-dot" id="pd5"></div>
+  </div>
+
+  <!-- CARD 1: Language -->
+  <div class="card" id="sec1">
+    <div class="section-label">
+      <div class="section-icon">🗣️</div>
+      <div>
+        <div class="section-title" id="langCardTitle">Select Your Language</div>
+        <div class="section-sub" id="langCardSub">भाषा निवडा / भाषा चुनें</div>
+      </div>
+    </div>
+    <div class="lang-group">
+      <label class="lang-pill" onclick="selectLang('mr',this)">
+        <input type="radio" name="lang" value="mr">
+        <div class="check-mark">✓</div>
+        <span class="pill-native">मराठी</span>
+        <span class="pill-en">Marathi</span>
+      </label>
+      <label class="lang-pill" onclick="selectLang('hi',this)">
+        <input type="radio" name="lang" value="hi">
+        <div class="check-mark">✓</div>
+        <span class="pill-native">हिंदी</span>
+        <span class="pill-en">Hindi</span>
+      </label>
+      <label class="lang-pill" onclick="selectLang('en',this)">
+        <input type="radio" name="lang" value="en">
+        <div class="check-mark">✓</div>
+        <span class="pill-native">English</span>
+        <span class="pill-en">English</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- CARD 2: Location -->
+  <div class="card" id="sec2">
+    <div class="section-label">
+      <div class="section-icon">📍</div>
+      <div>
+        <div class="section-title" id="locCardTitle">Your Location</div>
+        <div class="section-sub"  id="locCardSub">For local scheme &amp; weather data</div>
+      </div>
+    </div>
+    <div class="location-options">
+      <label class="loc-option" id="loc-gps" onclick="selectLoc('gps')">
+        <div class="loc-icon">🛰️</div>
+        <div>
+          <div class="loc-title" id="gpsTitle">Auto-detect via GPS</div>
+          <div class="loc-desc"  id="gpsDesc">Most accurate, offline-friendly</div>
+        </div>
+        <div class="badge-rec" id="recBadge">★ Recommended</div>
+      </label>
+      <label class="loc-option" id="loc-manual" onclick="selectLoc('manual')">
+        <div class="loc-icon">✍️</div>
+        <div>
+          <div class="loc-title" id="manualTitle">Enter Manually</div>
+          <div class="loc-desc"  id="manualDesc">District + Taluka + Village / Pincode</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="gps-live" id="gpsLive">
+      <div class="gps-dot"></div>
+      <span id="gpsText">Detecting location…</span>
+    </div>
+
+    <div class="manual-fields" id="manualFields">
+      <div class="field-row">
+        <div class="f-input">
+          <label id="lbState">State</label>
+          <select>
+            <option id="selStatePh">Select State</option>
+            <option selected>Maharashtra</option>
+            <option>Madhya Pradesh</option>
+            <option>Rajasthan</option>
+            <option>Gujarat</option>
+            <option>Punjab</option>
+            <option>Uttar Pradesh</option>
+          </select>
+        </div>
+        <div class="f-input">
+          <label id="lbDistrict">District</label>
+          <input type="text" id="inpDistrict" placeholder="e.g. Nashik">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="f-input">
+          <label id="lbTaluka">Taluka</label>
+          <input type="text" id="inpTaluka" placeholder="e.g. Niphad">
+        </div>
+        <div class="f-input">
+          <label id="lbVillage">Village / Pincode</label>
+          <input type="text" id="inpVillage" placeholder="e.g. Pimpri or 422003">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: Farm Details -->
+  <div class="card" id="sec3">
+    <div class="section-label">
+      <div class="section-icon">🌱</div>
+      <div>
+        <div class="section-title" id="farmCardTitle">Farm Details <span class="optional-tag" id="opt1">Optional</span></div>
+        <div class="section-sub"  id="farmCardSub">Better profile = more relevant schemes</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div class="sub-label" id="lblFarmSize">Farm Size</div>
+      <div class="farm-sizes">
+        <label class="size-card" onclick="selectCard(this,'farmsize')">
+          <input type="radio" name="farmsize" value="lt1">
+          <span class="size-icon">🌿</span>
+          <div class="size-label">&lt; 1 ha</div>
+          <div class="size-sub" id="sz1">Marginal</div>
+        </label>
+        <label class="size-card" onclick="selectCard(this,'farmsize')">
+          <input type="radio" name="farmsize" value="1-2">
+          <span class="size-icon">🌾</span>
+          <div class="size-label">1 – 2 ha</div>
+          <div class="size-sub" id="sz2">Small</div>
+        </label>
+        <label class="size-card" onclick="selectCard(this,'farmsize')">
+          <input type="radio" name="farmsize" value="2-5">
+          <span class="size-icon">🏡</span>
+          <div class="size-label">2 – 5 ha</div>
+          <div class="size-sub" id="sz3">Medium</div>
+        </label>
+        <label class="size-card" onclick="selectCard(this,'farmsize')">
+          <input type="radio" name="farmsize" value="gt5">
+          <span class="size-icon">🚜</span>
+          <div class="size-label">&gt; 5 ha</div>
+          <div class="size-sub" id="sz4">Large</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="margin-bottom:20px;">
+      <div class="sub-label" id="lblFarmerType">Farmer Type</div>
+      <div class="chips">
+        <label class="chip" onclick="selectChip(this,'farmertype')"><input type="radio" name="farmertype" value="small">🧑‍🌾 <span id="ftSmall">Small</span></label>
+        <label class="chip" onclick="selectChip(this,'farmertype')"><input type="radio" name="farmertype" value="marginal">🪴 <span id="ftMarginal">Marginal</span></label>
+        <label class="chip" onclick="selectChip(this,'farmertype')"><input type="radio" name="farmertype" value="other">👨‍👩‍👧 <span id="ftOther">Other</span></label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="sub-label" id="lblIrrigation">Irrigation Source</div>
+      <div class="chips">
+        <label class="chip" onclick="selectChip(this,'irrigation')"><input type="radio" name="irrigation" value="borewell">💧 <span id="irBorewell">Borewell</span></label>
+        <label class="chip" onclick="selectChip(this,'irrigation')"><input type="radio" name="irrigation" value="canal">🏞️ <span id="irCanal">Canal</span></label>
+        <label class="chip" onclick="selectChip(this,'irrigation')"><input type="radio" name="irrigation" value="rainfed">🌧️ <span id="irRainfed">Rainfed</span></label>
+        <label class="chip" onclick="selectChip(this,'irrigation')"><input type="radio" name="irrigation" value="farmpond">🏊 <span id="irFarmPond">Farm Pond</span></label>
+        <label class="chip" onclick="selectChip(this,'irrigation')"><input type="radio" name="irrigation" value="drip">💦 <span id="irDrip">Drip</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: Crop & Stage -->
+  <div class="card" id="sec4">
+    <div class="section-label">
+      <div class="section-icon">🌻</div>
+      <div>
+        <div class="section-title" id="cropCardTitle">Crop &amp; Growth Stage <span class="optional-tag" id="opt2">Optional</span></div>
+        <div class="section-sub"  id="cropCardSub">For targeted irrigation advisories</div>
+      </div>
+    </div>
+
+    <div class="sub-label" id="lblSelectCrop">Select Crop</div>
+    <div class="crop-search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="cropSearch" placeholder="Search crop e.g. Cotton, Wheat…" oninput="filterCrops(this.value)">
+    </div>
+    <div class="chips" id="cropChips">
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="cotton">🌸 <span class="cn" data-en="Cotton"   data-mr="कापूस"   data-hi="कपास">Cotton</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="soybean">🫘 <span class="cn" data-en="Soybean"  data-mr="सोयाबीन" data-hi="सोयाबीन">Soybean</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="wheat">🌾 <span class="cn" data-en="Wheat"    data-mr="गहू"     data-hi="गेहूं">Wheat</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="rice">🍚 <span class="cn" data-en="Rice"     data-mr="भात"     data-hi="चावल">Rice</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="sugarcane">🎋 <span class="cn" data-en="Sugarcane" data-mr="ऊस"   data-hi="गन्ना">Sugarcane</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="onion">🧅 <span class="cn" data-en="Onion"    data-mr="कांदा"   data-hi="प्याज">Onion</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="tomato">🍅 <span class="cn" data-en="Tomato"   data-mr="टोमॅटो"  data-hi="टमाटर">Tomato</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="maize">🌽 <span class="cn" data-en="Maize"    data-mr="मका"     data-hi="मक्का">Maize</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="grape">🍇 <span class="cn" data-en="Grape"    data-mr="द्राक्ष"  data-hi="अंगूर">Grape</span></label>
+      <label class="chip" onclick="selectChip(this,'crop')"><input type="radio" name="crop" value="jowar">🌾 <span class="cn" data-en="Jowar"    data-mr="ज्वारी"   data-hi="ज्वार">Jowar</span></label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sub-label" id="lblGrowthStage">Growth Stage</div>
+    <div style="font-size:11px;color:var(--text-mid);margin-bottom:14px;" id="stageTip">Tap to select current stage of your crop</div>
+    <div class="growth-timeline">
+      <label class="stage-item" onclick="selectStage(this)">
+        <input type="radio" name="stage" value="sowing">
+        <span class="s-icon">🌱</span>
+        <div class="s-label" id="stageSowing">Sowing</div>
+      </label>
+      <label class="stage-item" onclick="selectStage(this)">
+        <input type="radio" name="stage" value="vegetative">
+        <span class="s-icon">🌿</span>
+        <div class="s-label" id="stageVeg">Vegetative</div>
+      </label>
+      <label class="stage-item" onclick="selectStage(this)">
+        <input type="radio" name="stage" value="flowering">
+        <span class="s-icon">🌸</span>
+        <div class="s-label" id="stageFlower">Flowering</div>
+      </label>
+      <label class="stage-item" onclick="selectStage(this)">
+        <input type="radio" name="stage" value="fruiting">
+        <span class="s-icon">🍅</span>
+        <div class="s-label" id="stageFruit">Fruiting</div>
+      </label>
+      <label class="stage-item" onclick="selectStage(this)">
+        <input type="radio" name="stage" value="harvest">
+        <span class="s-icon">🚜</span>
+        <div class="s-label" id="stageHarvest">Harvest</div>
+      </label>
+    </div>
+  </div>
+
+  <button class="save-btn" onclick="saveProfile()" id="saveBtn">
+    <span id="saveBtnIco">💾</span> <span id="saveBtnText">Save My Profile</span>
+  </button>
+</div>
+
+<div class="toast" id="toast">
+  <span>✅</span> <span id="toastMsg">Your profile is saved! 🌾</span>
+</div>
+
+<script>
+// ════════════════════════════════
+//  TRANSLATION TABLE
+// ════════════════════════════════
+const T = {
+  en: {
+    appName:'Krishi Jal Mitra',
+    headerTitle:'Your <em>Farmer</em> Profile',
+    headerSub:'Personalized irrigation & government scheme recommendations',
+    langCardTitle:'Select Your Language', langCardSub:'भाषा निवडा / भाषा चुनें',
+    locCardTitle:'Your Location', locCardSub:'For local scheme & weather data',
+    gpsTitle:'Auto-detect via GPS', gpsDesc:'Most accurate, offline-friendly',
+    recBadge:'★ Recommended', manualTitle:'Enter Manually', manualDesc:'District + Taluka + Village / Pincode',
+    gpsDetecting:'Detecting location…',
+    gpsFound:(a,b)=>`📍 Lat: ${a}, Lng: ${b} — Location detected!`,
+    gpsDenied:'⚠️ Permission denied. Please enter manually.',
+    gpsUnsup:'⚠️ GPS not supported on this device.',
+    lbState:'State', selStatePh:'Select State', lbDistrict:'District',
+    inpDistrictPh:'e.g. Nashik', lbTaluka:'Taluka', inpTalukaPh:'e.g. Niphad',
+    lbVillage:'Village / Pincode', inpVillagePh:'e.g. Pimpri or 422003',
+    farmCardTitle:'Farm Details', farmCardSub:'Better profile = more relevant schemes', opt:'Optional',
+    lblFarmSize:'Farm Size', sz1:'Marginal', sz2:'Small', sz3:'Medium', sz4:'Large',
+    lblFarmerType:'Farmer Type', ftSmall:'Small', ftMarginal:'Marginal', ftOther:'Other',
+    lblIrrigation:'Irrigation Source', irBorewell:'Borewell', irCanal:'Canal',
+    irRainfed:'Rainfed', irFarmPond:'Farm Pond', irDrip:'Drip',
+    cropCardTitle:'Crop & Growth Stage', cropCardSub:'For targeted irrigation advisories',
+    lblSelectCrop:'Select Crop', cropPh:'Search crop e.g. Cotton, Wheat…',
+    lblGrowthStage:'Growth Stage', stageTip:'Tap to select current stage of your crop',
+    stageSowing:'Sowing', stageVeg:'Vegetative', stageFlower:'Flowering', stageFruit:'Fruiting', stageHarvest:'Harvest',
+    saveBtnText:'Save My Profile', savingText:'Saving…', savedText:'Profile Saved!',
+    toastMsg:'Your profile is saved! 🌾'
+  },
+  mr: {
+    appName:'कृषी जल मित्र',
+    headerTitle:'तुमचे <em>शेतकरी</em> प्रोफाइल',
+    headerSub:'वैयक्तिक सिंचन व शासकीय योजनांच्या शिफारसी',
+    langCardTitle:'तुमची भाषा निवडा', langCardSub:'Select Your Language / भाषा चुनें',
+    locCardTitle:'तुमचे स्थान', locCardSub:'स्थानिक योजना व हवामान माहितीसाठी',
+    gpsTitle:'GPS द्वारे स्वयंशोध', gpsDesc:'सर्वात अचूक, ऑफलाइनसाठी उपयुक्त',
+    recBadge:'★ शिफारस केलेले', manualTitle:'स्वतः प्रविष्ट करा', manualDesc:'जिल्हा + तालुका + गाव / पिनकोड',
+    gpsDetecting:'स्थान शोधत आहे…',
+    gpsFound:(a,b)=>`📍 अक्षांश: ${a}, रेखांश: ${b} — स्थान सापडले!`,
+    gpsDenied:'⚠️ परवानगी नाकारली. कृपया स्वतः प्रविष्ट करा.',
+    gpsUnsup:'⚠️ या डिव्हाइसवर GPS उपलब्ध नाही.',
+    lbState:'राज्य', selStatePh:'राज्य निवडा', lbDistrict:'जिल्हा',
+    inpDistrictPh:'उदा. नाशिक', lbTaluka:'तालुका', inpTalukaPh:'उदा. निफाड',
+    lbVillage:'गाव / पिनकोड', inpVillagePh:'उदा. पिंपरी किंवा ४२२००३',
+    farmCardTitle:'शेत तपशील', farmCardSub:'चांगले प्रोफाइल = अधिक योग्य योजना', opt:'ऐच्छिक',
+    lblFarmSize:'शेत क्षेत्रफळ', sz1:'सीमांत', sz2:'लहान', sz3:'मध्यम', sz4:'मोठे',
+    lblFarmerType:'शेतकरी प्रकार', ftSmall:'लहान', ftMarginal:'सीमांत', ftOther:'इतर',
+    lblIrrigation:'सिंचन स्रोत', irBorewell:'बोअरवेल', irCanal:'कालवा',
+    irRainfed:'पावसावर आधारित', irFarmPond:'शेततळे', irDrip:'ठिबक',
+    cropCardTitle:'पीक व वाढीची अवस्था', cropCardSub:'लक्ष्यित सिंचन सल्ल्यासाठी',
+    lblSelectCrop:'पीक निवडा', cropPh:'पीक शोधा उदा. कापूस, गहू…',
+    lblGrowthStage:'वाढीची अवस्था', stageTip:'तुमच्या पिकाची सध्याची अवस्था निवडा',
+    stageSowing:'पेरणी', stageVeg:'वनस्पती', stageFlower:'फुलोरा', stageFruit:'फळधारणा', stageHarvest:'काढणी',
+    saveBtnText:'माझे प्रोफाइल जतन करा', savingText:'जतन होत आहे…', savedText:'प्रोफाइल जतन झाले!',
+    toastMsg:'तुमचे प्रोफाइल जतन झाले! 🌾'
+  },
+  hi: {
+    appName:'कृषि जल मित्र',
+    headerTitle:'आपकी <em>किसान</em> प्रोफ़ाइल',
+    headerSub:'व्यक्तिगत सिंचाई और सरकारी योजनाओं की सिफारिशें',
+    langCardTitle:'अपनी भाषा चुनें', langCardSub:'भाषा निवडा / Select Your Language',
+    locCardTitle:'आपका स्थान', locCardSub:'स्थानीय योजना और मौसम डेटा के लिए',
+    gpsTitle:'GPS से स्वतः पहचानें', gpsDesc:'सबसे सटीक, ऑफलाइन-अनुकूल',
+    recBadge:'★ अनुशंसित', manualTitle:'मैन्युअल दर्ज करें', manualDesc:'जिला + तालुका + गाँव / पिनकोड',
+    gpsDetecting:'स्थान ढूंढ रहे हैं…',
+    gpsFound:(a,b)=>`📍 अक्षांश: ${a}, देशांतर: ${b} — स्थान मिला!`,
+    gpsDenied:'⚠️ अनुमति अस्वीकृत। कृपया मैन्युअल दर्ज करें।',
+    gpsUnsup:'⚠️ इस डिवाइस पर GPS उपलब्ध नहीं है।',
+    lbState:'राज्य', selStatePh:'राज्य चुनें', lbDistrict:'जिला',
+    inpDistrictPh:'जैसे नासिक', lbTaluka:'तालुका', inpTalukaPh:'जैसे निफाड',
+    lbVillage:'गाँव / पिनकोड', inpVillagePh:'जैसे पिंपरी या 422003',
+    farmCardTitle:'खेत विवरण', farmCardSub:'बेहतर प्रोफ़ाइल = अधिक प्रासंगिक योजनाएं', opt:'वैकल्पिक',
+    lblFarmSize:'खेत का आकार', sz1:'सीमांत', sz2:'छोटा', sz3:'मध्यम', sz4:'बड़ा',
+    lblFarmerType:'किसान का प्रकार', ftSmall:'छोटा', ftMarginal:'सीमांत', ftOther:'अन्य',
+    lblIrrigation:'सिंचाई स्रोत', irBorewell:'बोरवेल', irCanal:'नहर',
+    irRainfed:'वर्षा आधारित', irFarmPond:'खेत तालाब', irDrip:'ड्रिप',
+    cropCardTitle:'फसल और विकास अवस्था', cropCardSub:'लक्षित सिंचाई सलाह के लिए',
+    lblSelectCrop:'फसल चुनें', cropPh:'फसल खोजें जैसे कपास, गेहूं…',
+    lblGrowthStage:'विकास अवस्था', stageTip:'अपनी फसल की वर्तमान अवस्था चुनें',
+    stageSowing:'बुवाई', stageVeg:'वानस्पतिक', stageFlower:'फूल', stageFruit:'फलन', stageHarvest:'कटाई',
+    saveBtnText:'मेरी प्रोफ़ाइल सहेजें', savingText:'सहेज रहे हैं…', savedText:'प्रोफ़ाइल सहेजी गई!',
+    toastMsg:'आपकी प्रोफ़ाइल सहेजी गई! 🌾'
+  }
+};
+
+let currentLang = 'en';
+let locMode = null;
+
+function s(id){ return document.getElementById(id); }
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+
+  // Font class
+  document.body.className = 'lang-' + lang;
+
+  // Flash animation on content sections
+  ['sec1','sec2','sec3','sec4'].forEach(id => {
+    const el = s(id);
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = 'lang-flash 0.35s ease';
+    setTimeout(()=> el.style.animation = '', 400);
+  });
+
+  // Apply all text
+  s('appName').textContent       = t.appName;
+  s('headerTitle').innerHTML     = t.headerTitle;
+  s('headerSub').textContent     = t.headerSub;
+  s('langCardTitle').textContent = t.langCardTitle;
+  s('langCardSub').textContent   = t.langCardSub;
+  s('locCardTitle').textContent  = t.locCardTitle;
+  s('locCardSub').textContent    = t.locCardSub;
+  s('gpsTitle').textContent      = t.gpsTitle;
+  s('gpsDesc').textContent       = t.gpsDesc;
+  s('recBadge').textContent      = t.recBadge;
+  s('manualTitle').textContent   = t.manualTitle;
+  s('manualDesc').textContent    = t.manualDesc;
+  s('lbState').textContent       = t.lbState;
+  s('selStatePh').textContent    = t.selStatePh;
+  s('lbDistrict').textContent    = t.lbDistrict;
+  s('inpDistrict').placeholder   = t.inpDistrictPh;
+  s('lbTaluka').textContent      = t.lbTaluka;
+  s('inpTaluka').placeholder     = t.inpTalukaPh;
+  s('lbVillage').textContent     = t.lbVillage;
+  s('inpVillage').placeholder    = t.inpVillagePh;
+  s('farmCardTitle').innerHTML   = t.farmCardTitle + ` <span class="optional-tag">${t.opt}</span>`;
+  s('farmCardSub').textContent   = t.farmCardSub;
+  s('lblFarmSize').textContent   = t.lblFarmSize;
+  s('sz1').textContent           = t.sz1;
+  s('sz2').textContent           = t.sz2;
+  s('sz3').textContent           = t.sz3;
+  s('sz4').textContent           = t.sz4;
+  s('lblFarmerType').textContent = t.lblFarmerType;
+  s('ftSmall').textContent       = t.ftSmall;
+  s('ftMarginal').textContent    = t.ftMarginal;
+  s('ftOther').textContent       = t.ftOther;
+  s('lblIrrigation').textContent = t.lblIrrigation;
+  s('irBorewell').textContent    = t.irBorewell;
+  s('irCanal').textContent       = t.irCanal;
+  s('irRainfed').textContent     = t.irRainfed;
+  s('irFarmPond').textContent    = t.irFarmPond;
+  s('irDrip').textContent        = t.irDrip;
+  s('cropCardTitle').innerHTML   = t.cropCardTitle + ` <span class="optional-tag">${t.opt}</span>`;
+  s('cropCardSub').textContent   = t.cropCardSub;
+  s('lblSelectCrop').textContent = t.lblSelectCrop;
+  s('cropSearch').placeholder    = t.cropPh;
+  s('lblGrowthStage').textContent= t.lblGrowthStage;
+  s('stageTip').textContent      = t.stageTip;
+  s('stageSowing').textContent   = t.stageSowing;
+  s('stageVeg').textContent      = t.stageVeg;
+  s('stageFlower').textContent   = t.stageFlower;
+  s('stageFruit').textContent    = t.stageFruit;
+  s('stageHarvest').textContent  = t.stageHarvest;
+  s('saveBtnText').textContent   = t.saveBtnText;
+  s('toastMsg').textContent      = t.toastMsg;
+
+  // Crop chip names
+  document.querySelectorAll('.cn').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+  });
+
+  // GPS text if live
+  if(locMode === 'gps') s('gpsText').textContent = t.gpsDetecting;
+
+  document.title = t.appName + ' – ' + (lang==='en'?'Farmer Profile':lang==='mr'?'शेतकरी प्रोफाइल':'किसान प्रोफ़ाइल');
+}
+
+function selectLang(lang, el) {
+  document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  applyLang(lang);
+  updateProgress();
+}
+
+function selectLoc(mode) {
+  locMode = mode;
+  document.querySelectorAll('.loc-option').forEach(o => o.classList.remove('selected'));
+  s('loc-' + mode).classList.add('selected');
+  if(mode === 'manual') {
+    s('manualFields').classList.add('show');
+    s('gpsLive').classList.remove('show');
+  } else {
+    s('manualFields').classList.remove('show');
+    s('gpsLive').classList.add('show');
+    detectGPS();
+  }
+  updateProgress();
+}
+
+function detectGPS() {
+  const t = T[currentLang];
+  s('gpsText').textContent = t.gpsDetecting;
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => { s('gpsText').textContent = t.gpsFound(p.coords.latitude.toFixed(4), p.coords.longitude.toFixed(4)); },
+      ()  => { s('gpsText').textContent = t.gpsDenied; }
+    );
+  } else { s('gpsText').textContent = t.gpsUnsup; }
+}
+
+function selectChip(el, group) {
+  document.querySelectorAll('[name="'+group+'"]').forEach(i => i.parentElement.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+}
+
+function selectCard(el, group) {
+  document.querySelectorAll('[name="'+group+'"]').forEach(i => i.parentElement.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+}
+
+function selectStage(el) {
+  document.querySelectorAll('.stage-item').forEach(si => si.classList.remove('selected'));
+  el.classList.add('selected');
+  updateProgress();
+}
+
+function filterCrops(val) {
+  const q = val.toLowerCase();
+  document.querySelectorAll('#cropChips .chip').forEach(c => {
+    c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function updateProgress() {
+  let count = 0;
+  if(document.querySelector('.lang-pill.selected')) count++;
+  if(document.querySelector('.loc-option.selected')) count++;
+  if(document.querySelectorAll('.size-card.selected').length) count++;
+  if(document.querySelector('[name="irrigation"]:checked')) count++;
+  if(document.querySelector('[name="crop"]:checked')) count++;
+  for(let i=1;i<=5;i++) s('pd'+i).classList.toggle('active', i <= count);
+}
+
+function saveProfile() {
+  const t = T[currentLang];
+  s('saveBtn').style.pointerEvents = 'none';
+  s('saveBtnIco').textContent  = '⏳';
+  s('saveBtnText').textContent = t.savingText;
+
+  const profile = {
+    language: currentLang,
+    location: locMode,
+    farmSize:   document.querySelector('[name="farmsize"]:checked')?.value || null,
+    farmerType: document.querySelector('[name="farmertype"]:checked')?.value || null,
+    irrigation: document.querySelector('[name="irrigation"]:checked')?.value || null,
+    crop:       document.querySelector('[name="crop"]:checked')?.value || null,
+    stage:      document.querySelector('[name="stage"]:checked')?.value || null,
+    savedAt: new Date().toISOString()
+  };
+  try { localStorage.setItem('krishijalmitra_profile', JSON.stringify(profile)); } catch(e){}
+
+  setTimeout(() => {
+    s('saveBtn').style.pointerEvents = '';
+    s('saveBtnIco').textContent  = '✅';
+    s('saveBtnText').textContent = t.savedText;
+    s('toastMsg').textContent    = t.toastMsg;
+    showToast();
+    setTimeout(() => {
+      s('saveBtnIco').textContent  = '💾';
+      s('saveBtnText').textContent = t.saveBtnText;
+    }, 3000);
+  }, 1200);
+}
+
+function showToast() {
+  const t = s('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+
+// Restore saved profile language
+try {
+  const saved = JSON.parse(localStorage.getItem('krishijalmitra_profile') || 'null');
+  if(saved?.language) {
+    const pill = document.querySelector(`.lang-pill input[value="${saved.language}"]`);
+    if(pill) selectLang(saved.language, pill.parentElement);
+  }
+} catch(e){}
+</script>
+</body>
+</html>
